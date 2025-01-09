@@ -72,7 +72,7 @@ func main() {
 		}
 
 		if totalDisk > 0 {
-			freeDisk := math.Floor((totalDisk - usedDisk) / (1000 * 1000))
+			freeDisk := math.Floor((totalDisk - usedDisk) / (1024 * 1024))
 			if usedDisk/totalDisk > diskUsageLimit {
 				fmt.Printf("Free disk space is too low: %.0f Mb left\n", freeDisk)
 			}

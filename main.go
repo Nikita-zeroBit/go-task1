@@ -65,14 +65,14 @@ func main() {
 		}
 
 		if totalMemory > 0 {
-			memoryUsage := math.Round((usedMemory / totalMemory))
+			memoryUsage := math.Round((usedMemory / totalMemory)*100)
 			if memoryUsage > memoryUsageLimit {
-				fmt.Printf("Memory usage too high: %.0f%%\n", memoryUsage*100)
+				fmt.Printf("Memory usage too high: %.0f%%\n", memoryUsage)
 			}
 		}
 
 		if totalDisk > 0 {
-			freeDisk := math.Floor((totalDisk - usedDisk) / (1024 * 1024))
+			freeDisk := math.Floor((totalDisk - usedDisk) / (1000 * 1000))
 			if usedDisk/totalDisk > diskUsageLimit {
 				fmt.Printf("Free disk space is too low: %.0f Mb left\n", freeDisk)
 			}

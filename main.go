@@ -54,21 +54,21 @@ func main() {
 		}
 
 		if totalMemory > 0 {
-			memoryUsage := usedMemory / totalMemory
+			memoryUsage := math.Round((usedMemory / totalMemory) * 100)
 			if memoryUsage > memoryUsageLimit {
 				fmt.Printf("Memory usage too high: %.0f%%\n", memoryUsage*100)
 			}
 		}
 
 		if totalDisk > 0 {
-			freeDisk := (totalDisk - usedDisk) / (1024 * 1024)
+			freeDisk := math.Floor((totalDisk - usedDisk) / (1024 * 1024))
 			if usedDisk/totalDisk > diskUsageLimit {
 				fmt.Printf("Free disk space is too low: %.0f Mb left\n", freeDisk)
 			}
 		}
 
 		if totalNetwork > 0 {
-			freeNetwork := (totalNetwork - usedNetwork) * 8 / (1024 * 1024)
+			freeNetwork := math.Floor((totalNetwork - usedNetwork) * 8 / (1024 * 1024))
 			if usedNetwork/totalNetwork > networkUsageLimit {
 				fmt.Printf("Network bandwidth usage high: %.0f Mbit/s available\n", freeNetwork)
 			}

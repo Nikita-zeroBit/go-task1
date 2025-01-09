@@ -66,7 +66,7 @@ func main() {
 
 		if totalMemory > 0 {
 			memoryUsage := math.Round((usedMemory / totalMemory)*100)
-			if memoryUsage > memoryUsageLimit {
+			if memoryUsage > memoryUsageLimit*100 {
 				fmt.Printf("Memory usage too high: %.0f%%\n", memoryUsage)
 			}
 		}

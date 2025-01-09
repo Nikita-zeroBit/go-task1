@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -36,18 +36,18 @@ func main() {
 
 		errorCount = 0
 
-		body, err := ioutil.ReadAll(resp.Body)
+		body, _ := ioutil.ReadAll(resp.Body)
 		resp.Body.Close()
 
 		statistics := strings.Split(strings.TrimSpace(string(body)), ",")
 
-		loadAverage, err := strconv.ParseFloat(statistics[0], 64)
-		totalMemory, err := strconv.ParseFloat(statistics[1], 64)
-		usedMemory, err := strconv.ParseFloat(statistics[2], 64)
-		totalDisk, err := strconv.ParseFloat(statistics[3], 64)
-		usedDisk, err := strconv.ParseFloat(statistics[4], 64)
-		totalNetwork, err := strconv.ParseFloat(statistics[5], 64)
-		usedNetwork, err := strconv.ParseFloat(statistics[6], 64)
+		loadAverage, _ := strconv.ParseFloat(statistics[0], 64)
+		totalMemory, _ := strconv.ParseFloat(statistics[1], 64)
+		usedMemory, _ := strconv.ParseFloat(statistics[2], 64)
+		totalDisk, _ := strconv.ParseFloat(statistics[3], 64)
+		usedDisk, _ := strconv.ParseFloat(statistics[4], 64)
+		totalNetwork, _ := strconv.ParseFloat(statistics[5], 64)
+		usedNetwork, _ := strconv.ParseFloat(statistics[6], 64)
 
 		if loadAverage > loadAverageLimit {
 			fmt.Printf("Load Average is too high: %.2f\n", loadAverage)

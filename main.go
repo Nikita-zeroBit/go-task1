@@ -50,25 +50,25 @@ func main() {
 		usedNetwork, _ := strconv.ParseFloat(statistics[6], 64)
 
 		if loadAverage > loadAverageLimit {
-			fmt.Printf("Load Average is too high: %.f\n", loadAverage)
+			fmt.Printf("Load Average is too high: %f\n", loadAverage)
 		}
 
 		if totalMemory > 0 {
 			memoryUsage := usedMemory / totalMemory
 			if memoryUsage > memoryUsageLimit {
-				fmt.Printf("Memory usage too high: %.f\n", memoryUsage*100)
+				fmt.Printf("Memory usage too high: %f%%\n", memoryUsage*100)
 			}
 		}
 
 		if totalDisk > 0 {
 			freeDisk := (totalDisk - usedDisk) / (1024 * 1024)
 			if usedDisk/totalDisk > diskUsageLimit {
-				fmt.Printf("Free disk space is too low: %.f Mb left\n", freeDisk)
+				fmt.Printf("Free disk space is too low: %f Mb left\n", freeDisk)
 			}
 		}
 
 		if totalNetwork > 0 {
-			freeNetwork := (totalNetwork - usedNetwork) * 8 / (1024 * 1024)
+			freeNetwork := (totalNetwork - usedNetwork) / (1024 * 1024)
 			if usedNetwork/totalNetwork > networkUsageLimit {
 				fmt.Printf("Network bandwidth usage high: %.f Mbit/s available\n", freeNetwork)
 			}

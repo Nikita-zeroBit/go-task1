@@ -39,11 +39,6 @@ func main() {
 
 		body, _ := io.ReadAll(resp.Body)
 		resp.Body.Close()
-		if err != nil {
-			errorCount++
-			time.Sleep(pollInterval)
-			continue
-		}
 
 		statistics := strings.Split(strings.TrimSpace(string(body)), ",")
 		if len(statistics) != 7 {

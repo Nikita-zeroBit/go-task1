@@ -46,7 +46,7 @@ func main() {
 		}
 
 		statistics := strings.Split(strings.TrimSpace(string(body)), ",")
-		if len(stats) != 7 {
+		if len(statistics) != 7 {
 			errorCount++
 			time.Sleep(pollInterval)
 			continue

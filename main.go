@@ -79,7 +79,7 @@ func main() {
 		}
 
 		if totalNetwork > 0 {
-			freeNetwork := (totalNetwork - usedNetwork) / (1024 * 1024)
+			freeNetwork := math.Floor((totalNetwork - usedNetwork) / (1000 * 1000))
 			if usedNetwork/totalNetwork > networkUsageLimit {
 				fmt.Printf("Network bandwidth usage high: %.0f Mbit/s available\n", freeNetwork)
 			}

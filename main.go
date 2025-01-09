@@ -1,3 +1,79 @@
 package main
 
-func main() {}
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
+)
+
+const (
+	serverURL         = "http://srv.msk01.gigacorp.local/_stats"
+	maxFetchErrors    = 3
+	pollInterval      = 10 * time.Second
+	loadAverageLimit  = 30
+	memoryUsageLimit  = 0.8
+	diskUsageLimit    = 0.9
+	networkUsageLimit = 0.9
+)
+
+func main() {
+	errorCount := 0
+
+	for {
+		resp, err := http.Get(serverURL)
+		if err != nil || resp.StatusCode != http.StatusOK {
+			errorCount++
+			if errorCount >= maxFetchErrors {
+				fmt.Println("Unable to fetch server statistic.")
+				return
+			}
+			time.Sleep(pollInterval)
+			continue
+		}
+
+		errorCount = 0
+
+		body, err := ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
+
+		statistics := strings.Split(strings.TrimSpace(string(body)), ",")
+
+		loadAverage, err := strconv.ParseFloat(statistics[0], 64)
+		totalMemory, err := strconv.ParseFloat(statistics[1], 64)
+		usedMemory, err := strconv.ParseFloat(statistics[2], 64)
+		totalDisk, err := strconv.ParseFloat(statistics[3], 64)
+		usedDisk, err := strconv.ParseFloat(statistics[4], 64)
+		totalNetwork, err := strconv.ParseFloat(statistics[5], 64)
+		usedNetwork, err := strconv.ParseFloat(statistics[6], 64)
+
+		if loadAverage > loadAverageLimit {
+			fmt.Printf("Load Average is too high: %.2f\n", loadAverage)
+		}
+
+		if totalMemory > 0 {
+			memoryUsage := usedMemory / totalMemory
+			if memoryUsage > memoryUsageLimit {
+				fmt.Printf("Memory usage too high: %.2f%%\n", memoryUsage*100)
+			}
+		}
+
+		if totalDisk > 0 {
+			freeDisk := (totalDisk - usedDisk) / (1024 * 1024)
+			if usedDisk/totalDisk > diskUsageLimit {
+				fmt.Printf("Free disk space is too low: %.2f Mb left\n", freeDisk)
+			}
+		}
+
+		if totalNetwork > 0 {
+			freeNetwork := (totalNetwork - usedNetwork) * 8 / (1024 * 1024)
+			if usedNetwork/totalNetwork > networkUsageLimit {
+				fmt.Printf("Network bandwidth usage high: %.2f Mbit/s available\n", freeNetwork)
+			}
+		}
+
+		time.Sleep(pollInterval)
+	}
+}

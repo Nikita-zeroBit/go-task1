@@ -36,7 +36,7 @@ func main() {
 
 		errorCount = 0
 
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		resp.Body.Close()
 
 		statistics := strings.Split(strings.TrimSpace(string(body)), ",")

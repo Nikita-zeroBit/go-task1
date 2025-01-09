@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"math"
 )
 
 const (
@@ -38,8 +39,18 @@ func main() {
 
 		body, _ := io.ReadAll(resp.Body)
 		resp.Body.Close()
+		if err != nil {
+			errorCount++
+			time.Sleep(pollInterval)
+			continue
+		}
 
 		statistics := strings.Split(strings.TrimSpace(string(body)), ",")
+		if len(stats) != 7 {
+			errorCount++
+			time.Sleep(pollInterval)
+			continue
+		}
 
 		loadAverage, _ := strconv.ParseFloat(statistics[0], 64)
 		totalMemory, _ := strconv.ParseFloat(statistics[1], 64)
@@ -61,7 +72,7 @@ func main() {
 		}
 
 		if totalDisk > 0 {
-			freeDisk := (totalDisk - usedDisk) / (1024 * 1024)
+			freeDisk := math.Floor((totalDisk - usedDisk) / (1024 * 1024))
 			if usedDisk/totalDisk > diskUsageLimit {
 				fmt.Printf("Free disk space is too low: %.0f Mb left\n", freeDisk)
 			}
